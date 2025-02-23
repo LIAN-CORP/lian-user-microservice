@@ -5,19 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-public class User {
-    private UUID id;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String password;
-    private LocalDate birthDate;
+public class VerificationCode {
+    private UUID userId;
+    private String code;
+    private LocalDateTime expiresAt;
     private Boolean isVerified;
 }

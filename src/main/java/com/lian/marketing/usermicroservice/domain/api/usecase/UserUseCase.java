@@ -2,6 +2,7 @@ package com.lian.marketing.usermicroservice.domain.api.usecase;
 
 import com.lian.marketing.usermicroservice.domain.api.IAuthServicePort;
 import com.lian.marketing.usermicroservice.domain.api.IUserServicePort;
+import com.lian.marketing.usermicroservice.domain.api.IVerificationCodeServicePort;
 import com.lian.marketing.usermicroservice.domain.constants.ExceptionConstants;
 import com.lian.marketing.usermicroservice.domain.exceptions.BirthdayIsNullException;
 import com.lian.marketing.usermicroservice.domain.exceptions.EmailIsAlreadyRegisteredException;
@@ -18,6 +19,8 @@ public class UserUseCase implements IUserServicePort {
 
     private final IUserPersistencePort userPersistencePort;
     private final IAuthServicePort authServicePort;
+    private final IVerificationCodeServicePort verificationCodeServicePort;
+
 
     @Override
     public void createUser(User user) {
@@ -29,6 +32,16 @@ public class UserUseCase implements IUserServicePort {
         }
         user.setPassword(authServicePort.passwordEncoded(user.getPassword()));
         userPersistencePort.saveUser(user);
+    }
+
+    @Override
+    public void changeVerifiedStatus(User user) {
+        if(userPersistencePort.emailExists(user.getEmail())) {
+            throw new EmailIsAlreadyRegisteredException(ExceptionConstants.EMAIL_IS_ALREADY_REGISTERED);
+        }
+        user.setIsVerified(true);
+        userPersistencePort.saveUser(user); //Se debe guardar primero el status en la base de datos
+        verificationCodeServicePort.deleteCode(user.getId());
     }
 
     private boolean isAdult(LocalDate birthday){
