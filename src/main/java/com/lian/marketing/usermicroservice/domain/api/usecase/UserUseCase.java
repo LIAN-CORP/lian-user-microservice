@@ -36,7 +36,7 @@ public class UserUseCase implements IUserServicePort {
 
     @Override
     public void changeVerifiedStatus(User user) {
-        if(userPersistencePort.emailExists(user.getEmail())) {
+        if(!userPersistencePort.emailExists(user.getEmail())) {
             throw new EmailIsAlreadyRegisteredException(ExceptionConstants.EMAIL_IS_ALREADY_REGISTERED);
         }
         user.setIsVerified(true);
