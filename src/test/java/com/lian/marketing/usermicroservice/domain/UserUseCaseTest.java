@@ -1,6 +1,7 @@
 package com.lian.marketing.usermicroservice.domain;
 
 import com.lian.marketing.usermicroservice.domain.api.IAuthServicePort;
+import com.lian.marketing.usermicroservice.domain.api.IMailSenderServicePort;
 import com.lian.marketing.usermicroservice.domain.api.IUserServicePort;
 import com.lian.marketing.usermicroservice.domain.api.IVerificationCodeServicePort;
 import com.lian.marketing.usermicroservice.domain.api.usecase.UserUseCase;
@@ -15,8 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class UserUseCaseTest {
@@ -29,12 +29,14 @@ class UserUseCaseTest {
     private IAuthServicePort authServicePort;
     @Mock
     private IVerificationCodeServicePort verificationCodeServicePort;
+    @Mock
+    private IMailSenderServicePort mailSenderServicePort;
     private UserUseCase userUseCase;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        userUseCase = new UserUseCase(userPersistencePort, authServicePort, verificationCodeServicePort);
+        userUseCase = new UserUseCase(userPersistencePort, authServicePort, verificationCodeServicePort, mailSenderServicePort);
     }
 
     @Test
@@ -116,7 +118,7 @@ class UserUseCaseTest {
     @Test
     void ShouldThrowExceptionWhenBirthdayIsNull() {
         User user = DomainMocks.userMock(true);
-        user.setBirthDate(null);
+        user.setBirthday(null);
         when(userPersistencePort.emailExists(user.getEmail())).thenReturn(false);
 
         userServicePort.changeVerifiedStatus(user);
@@ -125,5 +127,24 @@ class UserUseCaseTest {
         verify(userPersistencePort, times(1)).emailExists(user.getEmail());
         verify(authServicePort, times(0)).passwordEncoded(user.getPassword());
     }
+
+    /*@Test
+    void shouldThrowsSendEmailExceptionWhenEmailSenderFails() throws MessagingException {
+        User user = DomainMocks.userMock(true);
+        when(userPersistencePort.emailExists(user.getEmail())).thenReturn(false);
+        when(authServicePort.passwordEncoded(user.getPassword())).thenReturn(user.getPassword());
+        when(verificationCodeServicePort.createCode(user.getId())).thenReturn("12345");
+        doThrow(new MessagingException("Error al enviar el correo"))
+                .when(mailSenderServicePort)
+                .sendVerificationEmail(user.getEmail(), "12345");
+
+        SendEmailException exception = assertThrows(SendEmailException.class, () -> userUseCase.createUser(user));
+
+        //assertThrows(SendEmailException.class, () -> userServicePort.createUser(user));
+        assertEquals("Error al enviar el correo", exception.getMessage());
+        verify(userPersistencePort, times(1)).emailExists(user.getEmail());
+        verify(authServicePort, times(1)).passwordEncoded(user.getPassword());
+        verify(verificationCodeServicePort, times(1)).createCode(user.getId());
+    }*/
 
 }

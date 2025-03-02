@@ -42,9 +42,11 @@ dependencies {
     //OPENAPI
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
     //Security
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+    //implementation 'org.springframework.boot:spring-boot-starter-security'
     //Email sender
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+    //Password encrypt
+    implementation 'de.mkammerer:argon2-jvm:2.11'
 }
 
 tasks.named('test') {

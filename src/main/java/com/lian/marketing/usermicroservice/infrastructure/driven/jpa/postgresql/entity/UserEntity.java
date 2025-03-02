@@ -1,24 +1,23 @@
 package com.lian.marketing.usermicroservice.infrastructure.driven.jpa.postgresql.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user")
+@Table(name = "_user")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
     private UUID id;
 
     @Column(name = "first_name", nullable = false)
@@ -36,7 +35,7 @@ public class UserEntity {
     @Column(nullable = false)
     private LocalDate birthday;
 
-    @Column(nullable = false)
+    @Column(name = "is_verified", nullable = false)
     private Boolean isVerified;
 
 }

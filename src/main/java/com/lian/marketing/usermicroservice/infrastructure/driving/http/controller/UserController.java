@@ -4,6 +4,7 @@ import com.lian.marketing.usermicroservice.application.dto.request.CreateUserReq
 import com.lian.marketing.usermicroservice.application.handler.UserHandler;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ public class UserController {
     private final UserHandler userHandler;
 
     @PostMapping
-    public ResponseEntity<Void> createUser(@Valid @RequestBody CreateUserRequest request) {
+    public ResponseEntity<Void> createUser(@Valid @RequestBody @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) CreateUserRequest request) {
         userHandler.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

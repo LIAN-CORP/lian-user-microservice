@@ -1,8 +1,6 @@
 package com.lian.marketing.usermicroservice.configuration;
 
-import com.lian.marketing.usermicroservice.domain.api.IAuthServicePort;
 import com.lian.marketing.usermicroservice.domain.api.IUserServicePort;
-import com.lian.marketing.usermicroservice.domain.api.IVerificationCodeServicePort;
 import com.lian.marketing.usermicroservice.domain.api.usecase.UserUseCase;
 import com.lian.marketing.usermicroservice.domain.spi.IUserPersistencePort;
 import com.lian.marketing.usermicroservice.infrastructure.driven.jpa.postgresql.adapter.UserAdapter;
@@ -20,6 +18,7 @@ public class UserBeanConfiguration {
     private final IUserEntityMapper userEntityMapper;
     private final AuthBeanConfiguration authBeanConfiguration;
     private final VerificationBeanConfiguration verificationBeanConfiguration;
+    private final MailSenderBeanConfiguration mailSenderBeanConfiguration;
 
     @Bean
     public IUserPersistencePort userPersistencePort() {
@@ -31,7 +30,8 @@ public class UserBeanConfiguration {
         return new UserUseCase(
                 userPersistencePort(),
                 authBeanConfiguration.authService(),
-                verificationBeanConfiguration.verificationCodeServicePort()
+                verificationBeanConfiguration.verificationCodeServicePort(),
+                mailSenderBeanConfiguration.mailSenderServicePort()
         );
     }
 

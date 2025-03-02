@@ -2,9 +2,12 @@ package com.lian.marketing.usermicroservice.infrastructure.driven.jpa.postgresql
 
 import com.lian.marketing.usermicroservice.domain.model.User;
 import com.lian.marketing.usermicroservice.domain.spi.IUserPersistencePort;
+import com.lian.marketing.usermicroservice.infrastructure.driven.jpa.postgresql.entity.UserEntity;
 import com.lian.marketing.usermicroservice.infrastructure.driven.jpa.postgresql.mapper.IUserEntityMapper;
 import com.lian.marketing.usermicroservice.infrastructure.driven.jpa.postgresql.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
+
+import java.util.UUID;
 
 @RequiredArgsConstructor
 public class UserAdapter implements IUserPersistencePort {
@@ -13,8 +16,9 @@ public class UserAdapter implements IUserPersistencePort {
     private final IUserEntityMapper userEntityMapper;
 
     @Override
-    public void saveUser(User user) {
-        userRepository.save(userEntityMapper.toEntity(user));
+    public UUID saveUser(User user) {
+        UserEntity entity = userRepository.save(userEntityMapper.toEntity(user));
+        return entity.getId();
     }
 
     @Override

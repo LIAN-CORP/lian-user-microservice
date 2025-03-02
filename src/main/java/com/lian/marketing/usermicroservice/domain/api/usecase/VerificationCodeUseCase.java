@@ -20,13 +20,14 @@ public class VerificationCodeUseCase implements IVerificationCodeServicePort {
     private final IVerificationCodePersistencePort verificationCodePersistencePort;
 
     @Override
-    public void createCode(UUID userId) {
+    public String createCode(UUID userId) {
         VerificationCode code = new VerificationCode();
         code.setUserId(userId);
         code.setCode(generateCode());
         code.setExpiresAt(LocalDateTime.now().plusMinutes(5));
         code.setIsVerified(false);
         verificationCodePersistencePort.saveCode(code);
+        return code.getCode();
     }
 
     @Override
