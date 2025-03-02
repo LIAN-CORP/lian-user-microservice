@@ -7,7 +7,6 @@ import com.lian.marketing.usermicroservice.domain.model.VerificationCode;
 import com.lian.marketing.usermicroservice.domain.spi.IVerificationCodePersistencePort;
 import lombok.RequiredArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
