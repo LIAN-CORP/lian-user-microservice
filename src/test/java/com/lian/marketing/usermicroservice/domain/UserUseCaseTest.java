@@ -8,13 +8,17 @@ import com.lian.marketing.usermicroservice.domain.api.usecase.UserUseCase;
 import com.lian.marketing.usermicroservice.domain.exceptions.BirthdayIsNullException;
 import com.lian.marketing.usermicroservice.domain.exceptions.EmailIsAlreadyRegisteredException;
 import com.lian.marketing.usermicroservice.domain.exceptions.IsUnderAgeException;
+import com.lian.marketing.usermicroservice.domain.exceptions.SendEmailException;
 import com.lian.marketing.usermicroservice.domain.mock.DomainMocks;
 import com.lian.marketing.usermicroservice.domain.model.User;
 import com.lian.marketing.usermicroservice.domain.spi.IUserPersistencePort;
+import jakarta.mail.MessagingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -128,23 +132,19 @@ class UserUseCaseTest {
         verify(authServicePort, times(0)).passwordEncoded(user.getPassword());
     }
 
-    /*@Test
+    @Test
     void shouldThrowsSendEmailExceptionWhenEmailSenderFails() throws MessagingException {
         User user = DomainMocks.userMock(true);
+        UUID userId = UUID.randomUUID();
+        String code = "112233";
         when(userPersistencePort.emailExists(user.getEmail())).thenReturn(false);
-        when(authServicePort.passwordEncoded(user.getPassword())).thenReturn(user.getPassword());
-        when(verificationCodeServicePort.createCode(user.getId())).thenReturn("12345");
-        doThrow(new MessagingException("Error al enviar el correo"))
-                .when(mailSenderServicePort)
-                .sendVerificationEmail(user.getEmail(), "12345");
+        when(authServicePort.passwordEncoded(user.getPassword())).thenReturn("hashed123");
+        when(userPersistencePort.saveUser(user)).thenReturn(userId);
+        when(verificationCodeServicePort.createCode(userId)).thenReturn(code);
+        doThrow(new MessagingException("Error")).when(mailSenderServicePort).sendVerificationEmail(user.getEmail(), code);
 
         SendEmailException exception = assertThrows(SendEmailException.class, () -> userUseCase.createUser(user));
-
-        //assertThrows(SendEmailException.class, () -> userServicePort.createUser(user));
-        assertEquals("Error al enviar el correo", exception.getMessage());
-        verify(userPersistencePort, times(1)).emailExists(user.getEmail());
-        verify(authServicePort, times(1)).passwordEncoded(user.getPassword());
-        verify(verificationCodeServicePort, times(1)).createCode(user.getId());
-    }*/
+        assertEquals("Error", exception.getMessage());
+    }
 
 }
