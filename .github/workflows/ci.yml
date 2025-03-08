@@ -56,6 +56,5 @@ jobs:
         if: always()
         run: |
           curl -F "file=@build/reports/jacocoHtml/test/jacocoTestReport.csv" \
-               -F "payload_json={\"content\": \"📊 **Coverage Test:** ${{ env.COVERAGE_PERCENTAGE }}% en la rama ${{ env.BRANCH_NAME }}
-               \n🔍 Reporte de cobertura adjunto en .csv\"}" \
-               ${{ secrets.DISCORD_WEBHOOK_URL }}
+               -F payload_json='{"content": "📊 **Coverage Test:** '"${{ env.COVERAGE_PERCENTAGE }}"'% en la rama '"${{ env.BRANCH_NAME }}"'\n🔍 Reporte de cobertura adjunto en .csv"}' \
+               "${{ secrets.DISCORD_WEBHOOK_URL }}"
