@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
-public class UserController {
+public class AuthController {
 
     private final UserHandler userHandler;
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<Void> createUser(@Valid @RequestBody @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) CreateUserRequest request) {
         userHandler.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
