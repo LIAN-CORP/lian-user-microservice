@@ -53,7 +53,8 @@ class VerificationCodeUseCaseTest {
                 uuid,
                 "456789",
                 LocalDateTime.now().plusMinutes(5),
-                false
+                false,
+                "Email@gmail.com"
         );
         when(verificationCodePersistencePort.findVerificationCodeByUserId(uuid)).thenReturn(Optional.of(code));
 
