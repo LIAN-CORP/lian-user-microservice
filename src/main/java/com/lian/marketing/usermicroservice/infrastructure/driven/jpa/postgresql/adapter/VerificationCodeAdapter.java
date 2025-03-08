@@ -36,4 +36,10 @@ public class VerificationCodeAdapter implements IVerificationCodePersistencePort
     public void deleteVerificationCodeByUserId(UUID userId) {
         verificationRepository.deleteByUserId(userId);
     }
+
+    @Override
+    public Optional<VerificationCode> findByEmailAndCode(String email, String code) {
+        Optional<VerificationCodeEntity> entity = verificationRepository.findByEmailAndCode(email, code);
+        return entity.map(verificationMapper::toModel);
+    }
 }

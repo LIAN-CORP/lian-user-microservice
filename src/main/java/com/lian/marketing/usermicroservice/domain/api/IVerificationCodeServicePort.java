@@ -6,4 +6,5 @@ public interface IVerificationCodeServicePort {
     String createCode(UUID userId);
     void changeVerifiedStatusCode(UUID userId);
     void deleteCode(UUID userId);
+    void findByEmailAndCode(String email, String code);
 }

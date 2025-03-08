@@ -7,4 +7,5 @@ import java.util.UUID;
 public interface IUserPersistencePort {
     UUID saveUser(User user);
     boolean emailExists(String email);
+    User findByEmail(String email);
 }

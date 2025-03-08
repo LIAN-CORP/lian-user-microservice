@@ -2,6 +2,8 @@ package com.lian.marketing.usermicroservice.domain.api.usecase;
 
 import com.lian.marketing.usermicroservice.domain.api.IVerificationCodeServicePort;
 import com.lian.marketing.usermicroservice.domain.constants.ExceptionConstants;
+import com.lian.marketing.usermicroservice.domain.exceptions.ExpiredCodeException;
+import com.lian.marketing.usermicroservice.domain.exceptions.InvalidCodeException;
 import com.lian.marketing.usermicroservice.domain.exceptions.NoVerificationCodeIsAssociateWithUser;
 import com.lian.marketing.usermicroservice.domain.model.VerificationCode;
 import com.lian.marketing.usermicroservice.domain.spi.IVerificationCodePersistencePort;
@@ -45,6 +47,19 @@ public class VerificationCodeUseCase implements IVerificationCodeServicePort {
     @Override
     public void deleteCode(UUID userId) {
         verificationCodePersistencePort.deleteVerificationCodeByUserId(userId);
+    }
+
+    @Override
+    public void findByEmailAndCode(String email, String code) {
+        VerificationCode verifyCode = verificationCodePersistencePort.findByEmailAndCode(email, code)
+                .orElseThrow(() -> new InvalidCodeException(ExceptionConstants.INVALID_VERIFICATION_CODE));
+
+        if (verifyCode.getExpiresAt().isBefore(LocalDateTime.now())) {
+           throw new ExpiredCodeException(ExceptionConstants.EXPIRED_VERIFICATION_CODE);
+        }
+
+        verifyCode.setIsVerified(true);
+        verificationCodePersistencePort.saveCode(verifyCode);
     }
 
     private String generateCode() {

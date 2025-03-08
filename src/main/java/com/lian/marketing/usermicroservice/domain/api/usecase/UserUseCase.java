@@ -56,6 +56,15 @@ public class UserUseCase implements IUserServicePort {
         verificationCodeServicePort.deleteCode(user.getId());
     }
 
+    @Override
+    public void verifyAccount(String email, String code) {
+        verificationCodeServicePort.findByEmailAndCode(email, code);
+        User user = userPersistencePort.findByEmail(email);
+        user.setIsVerified(true);
+        userPersistencePort.saveUser(user);
+        verificationCodeServicePort.deleteCode(user.getId());
+    }
+
     private boolean isAdult(LocalDate birthday){
         if(birthday == null){
             throw new BirthdayIsNullException(ExceptionConstants.BIRTHDAY_IS_NOT_VALID);
