@@ -22,7 +22,7 @@ jobs:
           java-version: '21'
 
       - name: Get branch name
-        run: echo "BRANCH_NAME=${GITHUB_REF_NAME}" >> $GITHUB_ENV
+        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
