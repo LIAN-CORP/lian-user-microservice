@@ -7,6 +7,7 @@ import com.lian.marketing.usermicroservice.infrastructure.driven.jpa.postgresql.
 import com.lian.marketing.usermicroservice.infrastructure.driven.jpa.postgresql.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -24,5 +25,10 @@ public class UserAdapter implements IUserPersistencePort {
     @Override
     public boolean emailExists(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email).map(userEntityMapper::toModel);
     }
 }

@@ -5,10 +5,7 @@ import com.lian.marketing.usermicroservice.domain.api.IMailSenderServicePort;
 import com.lian.marketing.usermicroservice.domain.api.IUserServicePort;
 import com.lian.marketing.usermicroservice.domain.api.IVerificationCodeServicePort;
 import com.lian.marketing.usermicroservice.domain.constants.ExceptionConstants;
-import com.lian.marketing.usermicroservice.domain.exceptions.BirthdayIsNullException;
-import com.lian.marketing.usermicroservice.domain.exceptions.EmailIsAlreadyRegisteredException;
-import com.lian.marketing.usermicroservice.domain.exceptions.IsUnderAgeException;
-import com.lian.marketing.usermicroservice.domain.exceptions.SendEmailException;
+import com.lian.marketing.usermicroservice.domain.exceptions.*;
 import com.lian.marketing.usermicroservice.domain.model.User;
 import com.lian.marketing.usermicroservice.domain.spi.IUserPersistencePort;
 import jakarta.mail.MessagingException;
@@ -16,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -59,10 +57,13 @@ public class UserUseCase implements IUserServicePort {
     @Override
     public void verifyAccount(String email, String code) {
         verificationCodeServicePort.findByEmailAndCode(email, code);
-        User user = userPersistencePort.findByEmail(email);
-        user.setIsVerified(true);
-        userPersistencePort.saveUser(user);
-        verificationCodeServicePort.deleteCode(user.getId());
+        Optional<User> user = userPersistencePort.findByEmail(email);
+        if(user.isEmpty()) {
+            throw new UserNotFoundException(String.format(ExceptionConstants.USER_NOT_FOUND, email));
+        }
+        user.get().setIsVerified(true);
+        userPersistencePort.saveUser(user.get());
+        verificationCodeServicePort.deleteCode(user.get().getId());
     }
 
     private boolean isAdult(LocalDate birthday){

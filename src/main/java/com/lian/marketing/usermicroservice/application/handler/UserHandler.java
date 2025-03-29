@@ -17,4 +17,8 @@ public class UserHandler {
         userServicePort.createUser(userMapper.toModel(request));
     }
 
+    public void verifyAccount() {
+
+    }
+
 }

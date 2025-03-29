@@ -9,4 +9,5 @@ public class ExceptionConstants {
     public static final String NO_VERIFICATION_CODE_IS_ASSOCIATE_WITH_USER = "No verification code is associated with user";
     public static final String INVALID_VERIFICATION_CODE = "Invalid verification code.";
     public static final String EXPIRED_VERIFICATION_CODE = "Expired verification code.";
+    public static final String USER_NOT_FOUND = "User not found with email: %s";
 }
