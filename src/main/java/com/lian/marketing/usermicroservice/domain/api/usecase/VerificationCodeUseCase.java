@@ -11,13 +11,11 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 @RequiredArgsConstructor
 public class VerificationCodeUseCase implements IVerificationCodeServicePort {
-
-    private static final Random RANDOM = new Random();
 
     private final IVerificationCodePersistencePort verificationCodePersistencePort;
 
@@ -63,9 +61,7 @@ public class VerificationCodeUseCase implements IVerificationCodeServicePort {
     }
 
     private String generateCode() {
-        int random1 = RANDOM.nextInt(99);
-        int random2 = RANDOM.nextInt(99);
-        int random3 = RANDOM.nextInt(99);
-        return String.format("%d%d%d", random1, random2, random3);
+        int verifyCode = ThreadLocalRandom.current().nextInt(100000, 1000000);
+        return String.format("%d",verifyCode);
     }
 }
