@@ -6,4 +6,5 @@ public interface IUserServicePort {
     void createUser(User user);
     void changeVerifiedStatus(User user);
     void verifyAccount(String email, String code);
+    void sendCode(String email);
 }

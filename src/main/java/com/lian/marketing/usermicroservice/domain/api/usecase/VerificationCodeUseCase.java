@@ -20,12 +20,13 @@ public class VerificationCodeUseCase implements IVerificationCodeServicePort {
     private final IVerificationCodePersistencePort verificationCodePersistencePort;
 
     @Override
-    public String createCode(UUID userId) {
+    public String createCode(UUID userId, String email) {
         VerificationCode code = new VerificationCode();
         code.setUserId(userId);
         code.setCode(generateCode());
         code.setExpiresAt(LocalDateTime.now().plusMinutes(5));
         code.setIsVerified(false);
+        code.setEmail(email);
         verificationCodePersistencePort.saveCode(code);
         return code.getCode();
     }
@@ -53,7 +54,8 @@ public class VerificationCodeUseCase implements IVerificationCodeServicePort {
                 .orElseThrow(() -> new InvalidCodeException(ExceptionConstants.INVALID_VERIFICATION_CODE));
 
         if (verifyCode.getExpiresAt().isBefore(LocalDateTime.now())) {
-           throw new ExpiredCodeException(ExceptionConstants.EXPIRED_VERIFICATION_CODE);
+            verificationCodePersistencePort.deleteVerificationCodeByUserId(verifyCode.getUserId());
+            throw new ExpiredCodeException(ExceptionConstants.EXPIRED_VERIFICATION_CODE);
         }
 
         verifyCode.setIsVerified(true);

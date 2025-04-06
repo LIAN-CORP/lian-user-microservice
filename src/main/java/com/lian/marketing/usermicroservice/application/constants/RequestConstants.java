@@ -12,5 +12,5 @@ public class RequestConstants {
     public static final String BIRTHDAY_MUST_BE_NOT_NULL = "Birthday must not be null";
     public static final String VERIFICATION_CODE_MUST_BE_NOT_EMPTY = "Verification code must not be empty";
     public static final String VERIFICATION_CODE_IS_NOT_VALID = "Verification code is not valid";
-    public static final String CODE_REGEX = "^[0-9]";
+    public static final String CODE_REGEX = "^[0-9]*$";
 }

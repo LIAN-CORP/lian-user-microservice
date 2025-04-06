@@ -36,7 +36,7 @@ public class UserUseCase implements IUserServicePort {
         UUID userId = userPersistencePort.saveUser(user);
 
         // Logic to call dependencies to get and send verification code
-        String code = verificationCodeServicePort.createCode(userId);
+        String code = verificationCodeServicePort.createCode(userId, user.getEmail());
         try {
             mailSenderServicePort.sendVerificationEmail(user.getEmail(), code);
         } catch (MessagingException ex) {
@@ -64,6 +64,18 @@ public class UserUseCase implements IUserServicePort {
         user.get().setIsVerified(true);
         userPersistencePort.saveUser(user.get());
         verificationCodeServicePort.deleteCode(user.get().getId());
+    }
+
+    @Override
+    public void sendCode(String email) {
+        userPersistencePort.findByEmail(email).ifPresentOrElse(user -> {
+            String code = verificationCodeServicePort.createCode(user.getId(), user.getEmail());
+            try {
+                mailSenderServicePort.sendVerificationEmail(email, code);
+            } catch (MessagingException ex) {
+                throw new SendEmailException(ex.getMessage());
+            }
+        }, () -> {throw new UserNotFoundException(String.format(ExceptionConstants.USER_NOT_FOUND, email));});
     }
 
     private boolean isAdult(LocalDate birthday){

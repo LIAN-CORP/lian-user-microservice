@@ -4,7 +4,6 @@ import com.lian.marketing.usermicroservice.application.constants.RequestConstant
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
 
 public record VerifyUserRequest (
     @NotEmpty(message = RequestConstants.EMAIL_MUST_BE_NOT_NULL)
