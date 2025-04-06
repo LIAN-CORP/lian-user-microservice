@@ -70,4 +70,34 @@ public class ControllerHandler {
                 LocalDateTime.now()
         ));
     }
+
+    @ExceptionHandler(NoVerificationCodeIsAssociateWithUser.class)
+    public ResponseEntity<ExceptionResponse> handleNoVerificationCode(NoVerificationCodeIsAssociateWithUser ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(
+                HttpStatus.BAD_REQUEST.toString(),
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        ));
+    }
+
+    @ExceptionHandler(InvalidCodeException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidCode(InvalidCodeException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(
+                HttpStatus.BAD_REQUEST.toString(),
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        ));
+    }
+
+    @ExceptionHandler(ExpiredCodeException.class)
+    public ResponseEntity<ExceptionResponse> handleExpiredCode(ExpiredCodeException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(
+                HttpStatus.BAD_REQUEST.toString(),
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        ));
+    }
 }
