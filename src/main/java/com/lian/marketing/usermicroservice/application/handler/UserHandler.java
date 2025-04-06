@@ -1,6 +1,7 @@
 package com.lian.marketing.usermicroservice.application.handler;
 
 import com.lian.marketing.usermicroservice.application.dto.request.CreateUserRequest;
+import com.lian.marketing.usermicroservice.application.dto.request.VerifyUserRequest;
 import com.lian.marketing.usermicroservice.application.mapper.IUserMapper;
 import com.lian.marketing.usermicroservice.domain.api.IUserServicePort;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +18,8 @@ public class UserHandler {
         userServicePort.createUser(userMapper.toModel(request));
     }
 
-    public void verifyAccount() {
-
+    public void verifyAccount(VerifyUserRequest request) {
+        userServicePort.verifyAccount(request.email(), request.code());
     }
 
 }
