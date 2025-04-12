@@ -3,7 +3,10 @@ package com.lian.marketing.usermicroservice.domain;
 import com.lian.marketing.usermicroservice.domain.api.IVerificationCodeServicePort;
 import com.lian.marketing.usermicroservice.domain.api.usecase.VerificationCodeUseCase;
 import com.lian.marketing.usermicroservice.domain.constants.ExceptionConstants;
+import com.lian.marketing.usermicroservice.domain.exceptions.ExpiredCodeException;
+import com.lian.marketing.usermicroservice.domain.exceptions.InvalidCodeException;
 import com.lian.marketing.usermicroservice.domain.exceptions.NoVerificationCodeIsAssociateWithUser;
+import com.lian.marketing.usermicroservice.domain.mock.DomainMocks;
 import com.lian.marketing.usermicroservice.domain.model.VerificationCode;
 import com.lian.marketing.usermicroservice.domain.spi.IVerificationCodePersistencePort;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,8 +38,9 @@ class VerificationCodeUseCaseTest {
     @Test
     void shouldUserCodeSuccessfully() {
         UUID uuid = UUID.randomUUID();
+        String email = "erickenriquechaparro@gmail.com";
 
-        verificationCodeServicePort.createCode(uuid);
+        verificationCodeServicePort.createCode(uuid, email);
 
         verify(verificationCodePersistencePort, times(1)).saveCode(argThat(code ->
             code.getUserId().equals(uuid) &&
@@ -53,13 +57,14 @@ class VerificationCodeUseCaseTest {
                 uuid,
                 "456789",
                 LocalDateTime.now().plusMinutes(5),
-                false
+                false,
+                "Email@gmail.com"
         );
         when(verificationCodePersistencePort.findVerificationCodeByUserId(uuid)).thenReturn(Optional.of(code));
 
         verificationCodeServicePort.changeVerifiedStatusCode(uuid);
 
-        assertDoesNotThrow(() -> verificationCodeServicePort.createCode(uuid));
+        assertDoesNotThrow(() -> verificationCodeServicePort.createCode(uuid, code.getEmail()));
     }
 
     @Test
@@ -84,6 +89,47 @@ class VerificationCodeUseCaseTest {
         verificationCodeServicePort.deleteCode(uuid);
 
         verify(verificationCodePersistencePort, times(1)).deleteVerificationCodeByUserId(uuid);
+    }
+
+    @Test
+    void shouldThrowInvalidCodeException() {
+        //Arrange
+        VerificationCode code = DomainMocks.verificationCodeMock();
+        when(verificationCodePersistencePort.findVerificationCodeByUserId(code.getUserId())).thenReturn(Optional.of(code));
+
+        //Act
+        //Assert
+        assertThrows(InvalidCodeException.class, () -> verificationCodeServicePort.findByEmailAndCode(code.getEmail(), code.getCode()));
+        verify(verificationCodePersistencePort, times(1)).findByEmailAndCode(code.getEmail(), code.getCode());
+        verify(verificationCodePersistencePort, never()).deleteVerificationCodeByUserId(code.getUserId());
+        verify(verificationCodePersistencePort, never()).saveCode(code);
+    }
+
+    @Test
+    void shouldThrowExpiredCodeExceptionWhenCodeIsExpired() {
+        //Arrange
+        VerificationCode code = DomainMocks.expiredVerificationCodeMock();
+        when(verificationCodePersistencePort.findByEmailAndCode(code.getEmail(), code.getCode())).thenReturn(Optional.of(code));
+
+        //Act & Assert
+        assertThrows(ExpiredCodeException.class, () -> verificationCodeServicePort.findByEmailAndCode(code.getEmail(), code.getCode()));
+        verify(verificationCodePersistencePort, times(1)).findByEmailAndCode(code.getEmail(), code.getCode());
+        verify(verificationCodePersistencePort, times(1)).deleteVerificationCodeByUserId(code.getUserId());
+        verify(verificationCodePersistencePort, never()).saveCode(code);
+    }
+
+    @Test
+    void shouldChangeCodeStatusSuccessfully() {
+        //Arrange
+        VerificationCode code = DomainMocks.verificationCodeMock();
+        when(verificationCodePersistencePort.findByEmailAndCode(code.getEmail(), code.getCode())).thenReturn(Optional.of(code));
+
+        //Act & Assert
+        assertDoesNotThrow(() -> verificationCodeServicePort.findByEmailAndCode(code.getEmail(), code.getCode()));
+        verify(verificationCodePersistencePort, times(1)).findByEmailAndCode(code.getEmail(), code.getCode());
+        verify(verificationCodePersistencePort, never()).deleteVerificationCodeByUserId(code.getUserId());
+        verify(verificationCodePersistencePort, times(1)).saveCode(code);
+
     }
 
 }

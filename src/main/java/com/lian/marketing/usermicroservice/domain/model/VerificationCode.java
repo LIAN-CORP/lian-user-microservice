@@ -17,4 +17,5 @@ public class VerificationCode {
     private String code;
     private LocalDateTime expiresAt;
     private Boolean isVerified;
+    private String email;
 }

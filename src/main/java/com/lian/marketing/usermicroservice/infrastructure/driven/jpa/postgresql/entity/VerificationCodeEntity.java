@@ -36,4 +36,7 @@ public class VerificationCodeEntity {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "email", nullable = false)
+    private String email;
+
 }

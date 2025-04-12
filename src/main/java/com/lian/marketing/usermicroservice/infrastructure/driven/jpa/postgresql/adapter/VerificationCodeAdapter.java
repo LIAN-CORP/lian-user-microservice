@@ -6,6 +6,8 @@ import com.lian.marketing.usermicroservice.infrastructure.driven.jpa.postgresql.
 import com.lian.marketing.usermicroservice.infrastructure.driven.jpa.postgresql.mapper.IVerificationEntityMapper;
 import com.lian.marketing.usermicroservice.infrastructure.driven.jpa.postgresql.repository.IVerificationCodeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -33,7 +35,14 @@ public class VerificationCodeAdapter implements IVerificationCodePersistencePort
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void deleteVerificationCodeByUserId(UUID userId) {
         verificationRepository.deleteByUserId(userId);
+    }
+
+    @Override
+    public Optional<VerificationCode> findByEmailAndCode(String email, String code) {
+        Optional<VerificationCodeEntity> entity = verificationRepository.findByEmailAndCode(email, code);
+        return entity.map(verificationMapper::toModel);
     }
 }

@@ -10,4 +10,5 @@ public interface IVerificationCodePersistencePort {
     Optional<VerificationCode> findVerificationCodeByUserId(UUID userId);
     void changeIsVerifiedStatus(VerificationCode code);
     void deleteVerificationCodeByUserId(UUID userId);
+    Optional<VerificationCode> findByEmailAndCode(String email, String code);
 }

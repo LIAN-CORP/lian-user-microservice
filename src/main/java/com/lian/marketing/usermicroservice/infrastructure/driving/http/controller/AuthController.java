@@ -1,6 +1,8 @@
 package com.lian.marketing.usermicroservice.infrastructure.driving.http.controller;
 
 import com.lian.marketing.usermicroservice.application.dto.request.CreateUserRequest;
+import com.lian.marketing.usermicroservice.application.dto.request.SendVerificationCodeRequest;
+import com.lian.marketing.usermicroservice.application.dto.request.VerifyUserRequest;
 import com.lian.marketing.usermicroservice.application.handler.UserHandler;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,18 @@ public class AuthController {
     public ResponseEntity<Void> createUser(@Valid @RequestBody @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) CreateUserRequest request) {
         userHandler.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<Void> verifyAccount(@Valid @RequestBody VerifyUserRequest request) {
+        userHandler.verifyAccount(request);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
+
+    @PostMapping("/sendcode")
+    public ResponseEntity<Void> sendCode(@Valid @RequestBody SendVerificationCodeRequest request) {
+        userHandler.sendCode(request);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }
