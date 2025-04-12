@@ -5,10 +5,7 @@ import com.lian.marketing.usermicroservice.domain.api.IMailSenderServicePort;
 import com.lian.marketing.usermicroservice.domain.api.IUserServicePort;
 import com.lian.marketing.usermicroservice.domain.api.IVerificationCodeServicePort;
 import com.lian.marketing.usermicroservice.domain.api.usecase.UserUseCase;
-import com.lian.marketing.usermicroservice.domain.exceptions.BirthdayIsNullException;
-import com.lian.marketing.usermicroservice.domain.exceptions.EmailIsAlreadyRegisteredException;
-import com.lian.marketing.usermicroservice.domain.exceptions.IsUnderAgeException;
-import com.lian.marketing.usermicroservice.domain.exceptions.SendEmailException;
+import com.lian.marketing.usermicroservice.domain.exceptions.*;
 import com.lian.marketing.usermicroservice.domain.mock.DomainMocks;
 import com.lian.marketing.usermicroservice.domain.model.User;
 import com.lian.marketing.usermicroservice.domain.spi.IUserPersistencePort;
@@ -18,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -140,11 +138,89 @@ class UserUseCaseTest {
         when(userPersistencePort.emailExists(user.getEmail())).thenReturn(false);
         when(authServicePort.passwordEncoded(user.getPassword())).thenReturn("hashed123");
         when(userPersistencePort.saveUser(user)).thenReturn(userId);
-        when(verificationCodeServicePort.createCode(userId)).thenReturn(code);
+        when(verificationCodeServicePort.createCode(userId, user.getEmail())).thenReturn(code);
         doThrow(new MessagingException("Error")).when(mailSenderServicePort).sendVerificationEmail(user.getEmail(), code);
 
         SendEmailException exception = assertThrows(SendEmailException.class, () -> userUseCase.createUser(user));
         assertEquals("Error", exception.getMessage());
+    }
+
+    @Test
+    void shouldVerifyAccountSuccessfully() {
+        //Arrange
+        User user = DomainMocks.userMock(true);
+        String code = "112233";
+        doNothing().when(verificationCodeServicePort).findByEmailAndCode(user.getEmail(), code);
+        when(userPersistencePort.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+
+        //Act
+        userUseCase.verifyAccount(user.getEmail(), code);
+
+        //Assert
+        verify(verificationCodeServicePort, times(1)).findByEmailAndCode(user.getEmail(), code);
+        verify(userPersistencePort, times(1)).findByEmail(user.getEmail());
+        verify(userPersistencePort, times(1)).saveUser(user);
+        verify(verificationCodeServicePort, times(1)).deleteCode(user.getId());
+    }
+
+    @Test
+    void shouldThrowUserNotFoundExceptionWhenUserNotExists() {
+        //Arrange
+        User user = DomainMocks.userMock(true);
+        String code = "112233";
+        doNothing().when(verificationCodeServicePort).findByEmailAndCode(user.getEmail(), code);
+        when(userPersistencePort.findByEmail(user.getEmail())).thenReturn(Optional.empty());
+
+        //Act & Assert
+        assertThrows(UserNotFoundException.class, () -> userUseCase.verifyAccount(user.getEmail(), code));
+        verify(verificationCodeServicePort, times(1)).findByEmailAndCode(user.getEmail(), code);
+        verify(userPersistencePort, times(1)).findByEmail(user.getEmail());
+        verify(userPersistencePort, never()).saveUser(user);
+        verify(verificationCodeServicePort, never()).deleteCode(user.getId());
+    }
+
+    @Test
+    void shouldSendCodeSuccessfully() {
+        //Arrange
+        User user = DomainMocks.userMock(true);
+        String code = "112233";
+        when(userPersistencePort.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(verificationCodeServicePort.createCode(user.getId(), user.getEmail())).thenReturn(code);
+
+        //Act
+        userUseCase.sendCode(user.getEmail());
+
+        //Assert
+        verify(userPersistencePort, times(1)).findByEmail(user.getEmail());
+        verify(verificationCodeServicePort, times(1)).createCode(user.getId(), user.getEmail());
+    }
+
+    @Test
+    void shouldThrowUserNotFoundExceptionWhenUserNotExistsToSendCode() {
+        //Arrange
+        User user = DomainMocks.userMock(true);
+        when(userPersistencePort.findByEmail(user.getEmail())).thenReturn(Optional.empty());
+
+        //Act & Assert
+        assertThrows(UserNotFoundException.class, () -> userUseCase.sendCode(user.getEmail()));
+        verify(userPersistencePort, times(1)).findByEmail(user.getEmail());
+        verify(verificationCodeServicePort, never()).createCode(user.getId(), user.getEmail());
+    }
+
+    @Test
+    void shouldThrowSendEmailExceptionWhenEmailSenderFails() throws MessagingException {
+        //Arrange
+        User user = DomainMocks.userMock(true);
+        String code = "112233";
+        when(userPersistencePort.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(verificationCodeServicePort.createCode(user.getId(), user.getEmail())).thenReturn(code);
+        doThrow(new MessagingException("Error")).when(mailSenderServicePort).sendVerificationEmail(user.getEmail(), code);
+
+        //Act & Assert
+        SendEmailException ex = assertThrows(SendEmailException.class, () -> userUseCase.sendCode(user.getEmail()));
+        assertEquals("Error", ex.getMessage());
+        verify(userPersistencePort, times(1)).findByEmail(user.getEmail());
+        verify(verificationCodeServicePort, times(1)).createCode(user.getId(), user.getEmail());
     }
 
 }
