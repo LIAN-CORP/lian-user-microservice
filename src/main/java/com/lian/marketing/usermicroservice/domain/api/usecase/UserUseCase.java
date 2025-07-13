@@ -6,6 +6,7 @@ import com.lian.marketing.usermicroservice.domain.api.IUserServicePort;
 import com.lian.marketing.usermicroservice.domain.api.IVerificationCodeServicePort;
 import com.lian.marketing.usermicroservice.domain.constants.ExceptionConstants;
 import com.lian.marketing.usermicroservice.domain.exceptions.*;
+import com.lian.marketing.usermicroservice.domain.model.ExistsResponse;
 import com.lian.marketing.usermicroservice.domain.model.User;
 import com.lian.marketing.usermicroservice.domain.spi.IUserPersistencePort;
 import jakarta.mail.MessagingException;
@@ -76,6 +77,12 @@ public class UserUseCase implements IUserServicePort {
                 throw new SendEmailException(ex.getMessage());
             }
         }, () -> {throw new UserNotFoundException(String.format(ExceptionConstants.USER_NOT_FOUND, email));});
+    }
+
+    @Override
+    public ExistsResponse userExistsById(UUID id) {
+        boolean exists = userPersistencePort.userExistsById(id);
+        return new ExistsResponse(exists);
     }
 
     private boolean isAdult(LocalDate birthday){

@@ -5,9 +5,12 @@ import com.lian.marketing.usermicroservice.application.dto.request.SendVerificat
 import com.lian.marketing.usermicroservice.application.dto.request.VerifyUserRequest;
 import com.lian.marketing.usermicroservice.application.mapper.IUserMapper;
 import com.lian.marketing.usermicroservice.domain.api.IUserServicePort;
+import com.lian.marketing.usermicroservice.domain.model.ExistsResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +30,10 @@ public class UserHandler {
 
     public void sendCode(SendVerificationCodeRequest request) {
         userServicePort.sendCode(request.email());
+    }
+
+    public ExistsResponse existsUserById(UUID id) {
+        return userServicePort.userExistsById(id);
     }
 
 }

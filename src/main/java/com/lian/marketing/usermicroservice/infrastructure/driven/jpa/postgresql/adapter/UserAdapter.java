@@ -31,4 +31,9 @@ public class UserAdapter implements IUserPersistencePort {
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email).map(userEntityMapper::toModel);
     }
+
+    @Override
+    public boolean userExistsById(UUID id) {
+        return userRepository.existsById(id);
+    }
 }

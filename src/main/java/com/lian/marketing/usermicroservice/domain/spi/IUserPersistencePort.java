@@ -9,4 +9,5 @@ public interface IUserPersistencePort {
     UUID saveUser(User user);
     boolean emailExists(String email);
     Optional<User> findByEmail(String email);
+    boolean userExistsById(UUID id);
 }
