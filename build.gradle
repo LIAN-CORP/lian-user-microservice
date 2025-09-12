@@ -43,10 +43,12 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
     //Security
     //implementation 'org.springframework.boot:spring-boot-starter-security'
-    //Email sender
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
     //Password encrypt
     implementation 'de.mkammerer:argon2-jvm:2.11'
+    implementation 'net.java.dev.jna:jna:5.13.0'
+    //Flyway
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-database-postgresql'
     // Netflix Eureka
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.2.1'
 }

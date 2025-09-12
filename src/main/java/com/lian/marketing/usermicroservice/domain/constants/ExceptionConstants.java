@@ -10,4 +10,5 @@ public class ExceptionConstants {
     public static final String INVALID_VERIFICATION_CODE = "Invalid verification code.";
     public static final String EXPIRED_VERIFICATION_CODE = "Expired verification code.";
     public static final String USER_NOT_FOUND = "User not found with email: %s";
+    public static final String PASSWORD_IS_BLANK = "Password is blank";
 }

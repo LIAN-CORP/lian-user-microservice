@@ -3,6 +3,7 @@ package com.lian.marketing.usermicroservice.infrastructure.driving.http.controll
 import com.lian.marketing.usermicroservice.application.dto.request.CreateUserRequest;
 import com.lian.marketing.usermicroservice.application.dto.request.SendVerificationCodeRequest;
 import com.lian.marketing.usermicroservice.application.dto.request.VerifyUserRequest;
+import com.lian.marketing.usermicroservice.application.handler.AuthHandler;
 import com.lian.marketing.usermicroservice.application.handler.UserHandler;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,24 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UserHandler userHandler;
+    private final AuthHandler authHandler;
 
     @PostMapping("/register")
     public ResponseEntity<Void> createUser(@Valid @RequestBody @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) CreateUserRequest request) {
-        userHandler.createUser(request);
+        authHandler.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    @PostMapping("/verify")
-    public ResponseEntity<Void> verifyAccount(@Valid @RequestBody VerifyUserRequest request) {
-        userHandler.verifyAccount(request);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-    }
-
-    @PostMapping("/sendcode")
-    public ResponseEntity<Void> sendCode(@Valid @RequestBody SendVerificationCodeRequest request) {
-        userHandler.sendCode(request);
-        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }

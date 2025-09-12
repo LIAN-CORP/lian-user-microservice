@@ -16,9 +16,6 @@ public class UserBeanConfiguration {
 
     private final IUserRepository userRepository;
     private final IUserEntityMapper userEntityMapper;
-    private final AuthBeanConfiguration authBeanConfiguration;
-    private final VerificationBeanConfiguration verificationBeanConfiguration;
-    private final MailSenderBeanConfiguration mailSenderBeanConfiguration;
 
     @Bean
     public IUserPersistencePort userPersistencePort() {
@@ -28,10 +25,7 @@ public class UserBeanConfiguration {
     @Bean
     public IUserServicePort userServicePort() {
         return new UserUseCase(
-                userPersistencePort(),
-                authBeanConfiguration.authService(),
-                verificationBeanConfiguration.verificationCodeServicePort(),
-                mailSenderBeanConfiguration.mailSenderServicePort()
+                userPersistencePort()
         );
     }
 
