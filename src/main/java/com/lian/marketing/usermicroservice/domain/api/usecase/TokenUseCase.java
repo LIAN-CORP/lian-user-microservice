@@ -5,6 +5,7 @@ import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,22 +18,22 @@ public class TokenUseCase implements ITokenServicePort {
   private final RSAKey rsaKey;
 
   @Override
-  public String generateToken(String username) throws JOSEException {
+  public String generateToken(String userId) throws JOSEException {
     JWSSigner signer = new RSASSASigner(rsaKey);
 
     JWTClaimsSet claims = new JWTClaimsSet.Builder()
-      .subject(username)
+      .subject(userId)
       .issuer("user-microservice")
       .expirationTime(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
       .build();
 
-    JWSObject jwsObject = new JWSObject(
+    SignedJWT jwtToken = new SignedJWT(
       new JWSHeader.Builder(JWSAlgorithm.RS256).keyID(rsaKey.getKeyID()).build(),
-      new Payload(claims.toJSONObject())
+      claims
     );
 
-    jwsObject.sign(signer);
+    jwtToken.sign(signer);
 
-    return jwsObject.serialize();
+    return jwtToken.serialize();
   }
 }

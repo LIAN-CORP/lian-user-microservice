@@ -1,6 +1,8 @@
 package com.lian.marketing.usermicroservice.application.handler;
 
 import com.lian.marketing.usermicroservice.application.dto.request.CreateUserRequest;
+import com.lian.marketing.usermicroservice.application.dto.request.LoginUserRequest;
+import com.lian.marketing.usermicroservice.application.dto.response.LoginUserResponse;
 import com.lian.marketing.usermicroservice.application.mapper.IUserMapper;
 import com.lian.marketing.usermicroservice.domain.api.IAuthServicePort;
 import lombok.RequiredArgsConstructor;
@@ -15,5 +17,10 @@ public class AuthHandler {
 
   public void createUser(CreateUserRequest request){
     authServicePort.createUser(userMapper.toModel(request));
+  }
+
+  public LoginUserResponse loginUser(LoginUserRequest request){
+    String accessToken = authServicePort.login(request.email(), request.password());
+    return new LoginUserResponse(accessToken);
   }
 }

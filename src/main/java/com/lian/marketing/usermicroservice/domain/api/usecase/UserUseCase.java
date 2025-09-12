@@ -41,6 +41,12 @@ public class UserUseCase implements IUserServicePort {
         userPersistencePort.saveUser(user);
     }
 
+    @Override
+    public User findUserByEmail(String email) {
+        return userPersistencePort.findByEmail(email)
+          .orElseThrow(() -> new InvalidCredentialsException(ExceptionConstants.INVALID_CREDENTIALS));
+    }
+
     private boolean isAdult(LocalDate birthday){
         if(birthday == null){
             throw new BirthdayIsNullException(ExceptionConstants.BIRTHDAY_IS_NOT_VALID);

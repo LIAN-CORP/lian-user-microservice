@@ -1,6 +1,7 @@
 package com.lian.marketing.usermicroservice.configuration;
 
 import com.lian.marketing.usermicroservice.domain.api.IAuthServicePort;
+import com.lian.marketing.usermicroservice.domain.api.ITokenServicePort;
 import com.lian.marketing.usermicroservice.domain.api.usecase.AuthUseCase;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
@@ -12,6 +13,9 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class AuthBeanConfiguration {
 
+    private final UserBeanConfiguration userBeanConfiguration;
+    private final ITokenServicePort tokenServicePort;
+
     @Bean
     public Argon2 argon2() {
         return Argon2Factory.create();
@@ -19,7 +23,7 @@ public class AuthBeanConfiguration {
 
     @Bean
     public IAuthServicePort authService() {
-        return new AuthUseCase(argon2());
+        return new AuthUseCase(argon2(), userBeanConfiguration.userServicePort(), tokenServicePort);
     }
 
 }

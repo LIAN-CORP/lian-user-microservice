@@ -9,4 +9,5 @@ public interface IUserServicePort {
     ExistsResponse userExistsById(UUID id);
     void validateUser(User user);
     void saveUser(User user);
+    User findUserByEmail(String email);
 }

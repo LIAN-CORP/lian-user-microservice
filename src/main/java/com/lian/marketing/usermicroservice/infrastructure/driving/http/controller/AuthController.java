@@ -1,6 +1,8 @@
 package com.lian.marketing.usermicroservice.infrastructure.driving.http.controller;
 
 import com.lian.marketing.usermicroservice.application.dto.request.CreateUserRequest;
+import com.lian.marketing.usermicroservice.application.dto.request.LoginUserRequest;
+import com.lian.marketing.usermicroservice.application.dto.response.LoginUserResponse;
 import com.lian.marketing.usermicroservice.application.handler.AuthHandler;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,4 +27,8 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<LoginUserResponse> login(@Valid @RequestBody LoginUserRequest request) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(authHandler.loginUser(request));
+    }
 }
