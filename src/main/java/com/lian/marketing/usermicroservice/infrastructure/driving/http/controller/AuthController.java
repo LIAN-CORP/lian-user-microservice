@@ -1,10 +1,7 @@
 package com.lian.marketing.usermicroservice.infrastructure.driving.http.controller;
 
 import com.lian.marketing.usermicroservice.application.dto.request.CreateUserRequest;
-import com.lian.marketing.usermicroservice.application.dto.request.SendVerificationCodeRequest;
-import com.lian.marketing.usermicroservice.application.dto.request.VerifyUserRequest;
 import com.lian.marketing.usermicroservice.application.handler.AuthHandler;
-import com.lian.marketing.usermicroservice.application.handler.UserHandler;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
