@@ -1,6 +1,8 @@
 package com.lian.marketing.usermicroservice.configuration;
 
+import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.KeyUse;
 import com.nimbusds.jose.jwk.RSAKey;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
@@ -26,6 +28,8 @@ public class JwksConfiguration {
     return new RSAKey.Builder(publicKey)
       .privateKey(privateKey)
       .keyID(UUID.randomUUID().toString())
+      .algorithm(JWSAlgorithm.RS256)
+      .keyUse(KeyUse.SIGNATURE)
       .build();
   }
 

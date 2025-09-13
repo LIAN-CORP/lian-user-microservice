@@ -18,11 +18,12 @@ public class TokenUseCase implements ITokenServicePort {
   private final RSAKey rsaKey;
 
   @Override
-  public String generateToken(String userId) throws JOSEException {
+  public String generateToken(String userId, String role) throws JOSEException {
     JWSSigner signer = new RSASSASigner(rsaKey);
 
     JWTClaimsSet claims = new JWTClaimsSet.Builder()
       .subject(userId)
+      .claim("role", role)
       .issuer("user-microservice")
       .expirationTime(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
       .build();

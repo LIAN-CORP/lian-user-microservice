@@ -35,7 +35,4 @@ public class UserEntity {
     @Column(nullable = false)
     private LocalDate birthday;
 
-    @Column(name = "is_verified", nullable = false)
-    private Boolean isVerified;
-
 }

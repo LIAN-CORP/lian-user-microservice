@@ -39,7 +39,7 @@ public class AuthUseCase implements IAuthServicePort {
                 throw new InvalidCredentialsException(ExceptionConstants.INVALID_CREDENTIALS);
             }
 
-            return tokenServicePort.generateToken(user.getId().toString());
+            return tokenServicePort.generateToken(user.getId().toString(), "ADMIN");
 
         } catch (JOSEException e) {
             throw new RuntimeException("Error trying to create the token");
