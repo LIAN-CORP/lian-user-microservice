@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -20,12 +21,12 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
     return httpSecurity
-      .csrf(csrf -> csrf.disable())
+      .csrf(AbstractHttpConfigurer::disable)
       .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-      .formLogin(form -> form.disable())
-      .httpBasic(httpBasic -> httpBasic.disable())
+      .formLogin(AbstractHttpConfigurer::disable)
+      .httpBasic(AbstractHttpConfigurer::disable)
       .authorizeHttpRequests(auth -> auth
-        .requestMatchers("/auth/**", "/.well-known/jwks.json").permitAll()
+        .requestMatchers("/auth/**", "/.well-known/jwks.json", "/user/**").permitAll()
         .anyRequest().authenticated()
       )
       .addFilterBefore(jwtAuthFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
