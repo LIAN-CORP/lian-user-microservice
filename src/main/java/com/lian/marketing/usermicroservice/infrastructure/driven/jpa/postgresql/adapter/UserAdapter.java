@@ -36,4 +36,14 @@ public class UserAdapter implements IUserPersistencePort {
     public boolean userExistsById(UUID id) {
         return userRepository.existsById(id);
     }
+
+    @Override
+    public Optional<User> findUserById(UUID id) {
+        return userRepository.findById(id).map(userEntityMapper::toModel);
+    }
+
+    @Override
+    public UUID findAnyAdminUser() {
+        return userRepository.findAnyAdminUser();
+    }
 }

@@ -21,6 +21,7 @@ public class AuthHandler {
 
   public LoginUserResponse loginUser(LoginUserRequest request){
     String accessToken = authServicePort.login(request.email(), request.password());
-    return new LoginUserResponse(accessToken);
+    String[] split = accessToken.split("\\|");
+    return new LoginUserResponse(split[0], split[1]);
   }
 }

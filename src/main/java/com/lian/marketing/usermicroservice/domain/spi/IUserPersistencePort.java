@@ -10,4 +10,6 @@ public interface IUserPersistencePort {
     boolean emailExists(String email);
     Optional<User> findByEmail(String email);
     boolean userExistsById(UUID id);
+    Optional<User> findUserById(UUID id);
+    UUID findAnyAdminUser();
 }

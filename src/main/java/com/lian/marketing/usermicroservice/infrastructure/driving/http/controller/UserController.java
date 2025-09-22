@@ -1,13 +1,13 @@
 package com.lian.marketing.usermicroservice.infrastructure.driving.http.controller;
 
+import com.lian.marketing.usermicroservice.application.dto.response.RegisterCodeResponse;
 import com.lian.marketing.usermicroservice.application.handler.UserHandler;
 import com.lian.marketing.usermicroservice.domain.model.ExistsResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -23,4 +23,8 @@ public class UserController {
         return ResponseEntity.ok(userHandler.existsUserById(id));
     }
 
+    @PostMapping("/register/code")
+    public ResponseEntity<RegisterCodeResponse> registerUser(@AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(userHandler.generateRegisterCode(jwt));
+    }
 }

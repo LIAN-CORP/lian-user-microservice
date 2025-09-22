@@ -15,6 +15,7 @@ public class AuthBeanConfiguration {
 
     private final UserBeanConfiguration userBeanConfiguration;
     private final ITokenServicePort tokenServicePort;
+    private final RegisterUserBeanConfiguration registerUserBeanConfiguration;
 
     @Bean
     public Argon2 argon2() {
@@ -23,7 +24,7 @@ public class AuthBeanConfiguration {
 
     @Bean
     public IAuthServicePort authService() {
-        return new AuthUseCase(argon2(), userBeanConfiguration.userServicePort(), tokenServicePort);
+        return new AuthUseCase(argon2(), userBeanConfiguration.userServicePort(), tokenServicePort, registerUserBeanConfiguration.registerUserPersistencePort());
     }
 
 }

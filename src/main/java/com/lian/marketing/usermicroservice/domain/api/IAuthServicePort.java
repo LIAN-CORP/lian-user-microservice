@@ -1,9 +1,9 @@
 package com.lian.marketing.usermicroservice.domain.api;
 
-import com.lian.marketing.usermicroservice.domain.model.User;
+import com.lian.marketing.usermicroservice.domain.model.RegistrationUser;
 
 public interface IAuthServicePort {
     String passwordEncoded(String password);
-    void createUser(User user);
+    void createUser(RegistrationUser user);
     String login(String email, String password);
 }

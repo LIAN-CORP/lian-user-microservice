@@ -35,4 +35,7 @@ public class UserEntity {
     @Column(nullable = false)
     private LocalDate birthday;
 
+    @Column(name = "role", nullable = false)
+    private String role;
+
 }
