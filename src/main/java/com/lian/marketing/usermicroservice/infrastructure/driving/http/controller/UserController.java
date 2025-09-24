@@ -8,6 +8,7 @@ import com.lian.marketing.usermicroservice.domain.model.ExistsResponse;
 import com.lian.marketing.usermicroservice.domain.model.RegistrationUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +33,15 @@ public class UserController {
         return ResponseEntity.ok(userHandler.generateRegisterCode(jwt));
     }
 
-    @PostMapping("/registration/{id}/accept")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/registration/accept/{id}")
     public ResponseEntity<Void> acceptRegistration(@PathVariable("id") UUID id) {
         registerUserHandler.registerUser(id, true);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/registration/{id}/reject")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/registration/reject/{id}")
     public ResponseEntity<Void> rejectRegistration(@PathVariable("id") UUID id) {
         registerUserHandler.registerUser(id, false);
         return ResponseEntity.ok().build();

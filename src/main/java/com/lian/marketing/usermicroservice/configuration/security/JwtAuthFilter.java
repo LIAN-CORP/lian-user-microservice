@@ -16,12 +16,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -50,12 +51,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       var claims = jwtProcessor.process(token, null);
       String userId = claims.getSubject();
       String role = claims.getStringClaim("role");
-      var auth = new UsernamePasswordAuthenticationToken(userId, null, Collections.singleton(() -> role));
+      logger.info("JWT Auth Filter -> Role: " + role);
+      var authority = new SimpleGrantedAuthority("ROLE_" + role);
 
+      //var auth = new UsernamePasswordAuthenticationToken(userId, null, Collections.singleton(() -> role));
+      var auth = new UsernamePasswordAuthenticationToken(userId, null, List.of(authority));
       auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-      SecurityContextHolder.getContext().setAuthentication(auth);
 
+      SecurityContextHolder.getContext().setAuthentication(auth);
+      logger.info("JWT Authorities set: " + auth.getAuthorities());
     } catch (Exception ignored) {
+      logger.info("JWT Failed: ", ignored);
       SecurityContextHolder.clearContext();
     }
 

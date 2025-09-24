@@ -5,11 +5,13 @@ import com.lian.marketing.usermicroservice.domain.model.ContentPage;
 import com.lian.marketing.usermicroservice.domain.model.RegistrationUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RegisterUserHandler {
 
   private final IRegistrationServicePort registrationServicePort;
