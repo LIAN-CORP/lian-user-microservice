@@ -1,5 +1,7 @@
 package com.lian.marketing.usermicroservice.configuration;
 
+import com.lian.marketing.usermicroservice.domain.api.IRegistrationServicePort;
+import com.lian.marketing.usermicroservice.domain.api.usecase.RegistrationUseCase;
 import com.lian.marketing.usermicroservice.domain.spi.IRegisterUserPersistencePort;
 import com.lian.marketing.usermicroservice.infrastructure.driven.jpa.postgresql.adapter.RegistrationUserAdapter;
 import com.lian.marketing.usermicroservice.infrastructure.driven.jpa.postgresql.mapper.IUserRegistrationRequestEntityMapper;
@@ -10,14 +12,19 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor
-public class RegisterUserBeanConfiguration {
+public class RegistrationUserBeanConfig {
 
-  private final IUserRegistrationRequestEntityMapper mapper;
   private final IUserRegistrationRepository repository;
+  private final IUserRegistrationRequestEntityMapper mapper;
 
   @Bean
-  public IRegisterUserPersistencePort registerUserPersistencePort() {
+  public IRegisterUserPersistencePort registerUserPersistencePort(){
     return new RegistrationUserAdapter(repository, mapper);
+  }
+
+  @Bean
+  public IRegistrationServicePort registrationServicePort(){
+    return new RegistrationUseCase(registerUserPersistencePort());
   }
 
 }

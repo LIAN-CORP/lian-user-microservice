@@ -52,7 +52,9 @@ public class AuthUseCase implements IAuthServicePort {
 
         } catch (JOSEException e) {
             throw new RuntimeException("Error trying to create the token");
-        } catch (Exception e) {
+        } catch (InvalidCredentialsException e) {
+            throw new InvalidCredentialsException(e.getMessage());
+        }catch (Exception e) {
             throw new RuntimeException("Error: " + e.getMessage());
         }
     }

@@ -15,7 +15,7 @@ public class AuthBeanConfiguration {
 
     private final UserBeanConfiguration userBeanConfiguration;
     private final ITokenServicePort tokenServicePort;
-    private final RegisterUserBeanConfiguration registerUserBeanConfiguration;
+    private final RegistrationUserBeanConfig registerUserBeanConfiguration;
 
     @Bean
     public Argon2 argon2() {

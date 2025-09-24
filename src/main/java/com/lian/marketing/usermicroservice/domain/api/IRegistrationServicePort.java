@@ -1,13 +1,11 @@
-package com.lian.marketing.usermicroservice.domain.spi;
+package com.lian.marketing.usermicroservice.domain.api;
 
 import com.lian.marketing.usermicroservice.domain.model.ContentPage;
 import com.lian.marketing.usermicroservice.domain.model.RegistrationUser;
 
 import java.util.UUID;
 
-public interface IRegisterUserPersistencePort {
-  void saveRegisterUser(RegistrationUser registrationUser);
-  boolean existsById(UUID id);
-  void changeRegisterStatus(UUID id, String approved);
+public interface IRegistrationServicePort {
+  void sendApproval(UUID id, boolean approved);
   ContentPage<RegistrationUser> findAllActiveRegistrationRequests(int page, int size);
 }

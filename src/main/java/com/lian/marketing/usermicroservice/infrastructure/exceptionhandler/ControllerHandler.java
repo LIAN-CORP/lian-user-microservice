@@ -17,7 +17,8 @@ public class ControllerHandler {
                 HttpStatus.BAD_REQUEST.toString(),
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                "METHOD_ARGUMENT_NOT_VALID_EXCEPTION"
         ));
     }
 
@@ -27,7 +28,8 @@ public class ControllerHandler {
                 HttpStatus.BAD_REQUEST.toString(),
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                "EMAIL_IS_ALREADY_REGISTERED_EXCEPTION"
         ));
     }
 
@@ -37,7 +39,8 @@ public class ControllerHandler {
                 HttpStatus.BAD_REQUEST.toString(),
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                "IS_UNDER_AGE_EXCEPTION"
         ));
     }
 
@@ -47,7 +50,8 @@ public class ControllerHandler {
                 HttpStatus.BAD_REQUEST.toString(),
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                "SEND_EMAIL_EXCEPTION"
         ));
     }
 
@@ -57,7 +61,8 @@ public class ControllerHandler {
                 HttpStatus.BAD_REQUEST.toString(),
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                "USER_NOT_FOUND_EXCEPTION"
         ));
     }
 
@@ -67,7 +72,8 @@ public class ControllerHandler {
                 HttpStatus.BAD_REQUEST.toString(),
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                "BIRTHDAY_IS_NULL_EXCEPTION"
         ));
     }
 
@@ -77,7 +83,8 @@ public class ControllerHandler {
                 HttpStatus.BAD_REQUEST.toString(),
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                "NO_VERIFICATION_CODE_IS_ASSOCIATE_WITH_USER"
         ));
     }
 
@@ -87,7 +94,8 @@ public class ControllerHandler {
                 HttpStatus.BAD_REQUEST.toString(),
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+           "INVALID_CODE_EXCEPTION"
         ));
     }
 
@@ -97,7 +105,19 @@ public class ControllerHandler {
                 HttpStatus.BAD_REQUEST.toString(),
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+           "EXPIRED_CODE_EXCEPTION"
+        ));
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<ExceptionResponse> handleExpiredCode(InvalidCredentialsException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(
+          HttpStatus.BAD_REQUEST.toString(),
+          HttpStatus.BAD_REQUEST.value(),
+          ex.getMessage(),
+          LocalDateTime.now(),
+          "INVALID_CREDENTIALS_EXCEPTION"
         ));
     }
 }
