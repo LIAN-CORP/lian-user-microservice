@@ -47,7 +47,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping
+    @GetMapping("/registration/requests")
     public ResponseEntity<ContentPage<RegistrationUser>> getAllActiveRegistrationRequests(
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "10") int size
