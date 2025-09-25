@@ -47,6 +47,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/registration/requests")
     public ResponseEntity<ContentPage<RegistrationUser>> getAllActiveRegistrationRequests(
       @RequestParam(defaultValue = "0") int page,
