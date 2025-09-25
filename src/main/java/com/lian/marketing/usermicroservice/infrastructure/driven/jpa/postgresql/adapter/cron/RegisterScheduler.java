@@ -45,6 +45,14 @@ public class RegisterScheduler {
         request.getBirthday(),
         "USER"
       )));
+
+    //Delete old pending requests - 1 day old
+    requests.stream()
+      .filter(r -> "PENDING".equals(r.getStatus()))
+      .filter(r -> r.getCreatedAt().isBefore(java.time.LocalDate.now().minusDays(1)))
+      .map(UserRegistrationRequestEntity::getId)
+      .toList()
+      .forEach(registrationRepository::deleteById);
   }
 
 }
