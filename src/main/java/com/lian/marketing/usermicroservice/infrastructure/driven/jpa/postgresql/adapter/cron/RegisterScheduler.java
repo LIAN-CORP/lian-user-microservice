@@ -28,7 +28,9 @@ public class RegisterScheduler {
       .filter(r -> "REJECTED".equals(r.getStatus()))
       .map(UserRegistrationRequestEntity::getId)
       .toList();
-    registrationRepository.deleteByIds(rejectedRequests);
+    if(!rejectedRequests.isEmpty()){
+      registrationRepository.deleteByIds(rejectedRequests);
+    }
 
 
     //Insert accepted requests
