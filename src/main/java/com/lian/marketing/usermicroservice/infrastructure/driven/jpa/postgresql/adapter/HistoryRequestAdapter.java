@@ -22,7 +22,7 @@ public class HistoryRequestAdapter implements IHistoryRequestPersistencePort {
   @Override
   public ContentPage<HistoryRequest> findAllHistoryRequests(int page, int size, String status) {
     Pageable pageable = PageRequest.of(page, size);
-    Page<HistoryRequestEntity> requests = historyRequestRepository.findByStatus(pageable, status);
+    Page<HistoryRequestEntity> requests = historyRequestRepository.findByStatus(status, pageable);
     List<HistoryRequest> historyList = historyRequestEntityMapper.toModelList(requests.getContent());
     return new ContentPage<>(
       requests.getTotalPages(),

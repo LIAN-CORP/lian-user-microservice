@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.UUID;
 
 public interface IHistoryRequestRepository extends JpaRepository<HistoryRequestEntity, UUID> {
-  @Query(value = "SELECT * FROM history_request WHERE status LIKE LOWER(CONCAT('%',:status, '%'))", nativeQuery = true)
-  Page<HistoryRequestEntity> findByStatus(Pageable page, String status);
+  @Query(
+    value = "SELECT * FROM history_request WHERE LOWER(status) LIKE LOWER(CONCAT('%', :status, '%'))", nativeQuery = true)
+  Page<HistoryRequestEntity> findByStatus(String status, Pageable page);
 }
