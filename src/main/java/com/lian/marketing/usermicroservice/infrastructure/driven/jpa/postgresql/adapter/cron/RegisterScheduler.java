@@ -25,7 +25,7 @@ public class RegisterScheduler {
   private final IUserRegistrationRepository registrationRepository;
   private final IHistoryRequestRepository historyRequestRepository;
 
-  @Scheduled(cron = "0 0/2 * * * ?")
+  @Scheduled(cron = "0 0/5 * * * ?")
   public void selectionRequests(){
     log.info("Starting selection request cron job");
     //Delete rejected requests
