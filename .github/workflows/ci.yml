@@ -22,7 +22,7 @@ jobs:
           java-version: '21'
 
       - name: Get branch name
-        run: echo "BRANCH_NAME=${GITHUB_REF_NAME}" >> $GITHUB_ENV
+        run: echo "BRANCH_NAME=${{ github.event.pull_request.head.ref }}" >> $GITHUB_ENV
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -56,6 +56,5 @@ jobs:
         if: always()
         run: |
           curl -F "file=@build/reports/jacocoHtml/test/jacocoTestReport.csv" \
-               -F "payload_json={\"content\": \"📊 **Coverage Test:** ${{ env.COVERAGE_PERCENTAGE }}% en la rama ${{ env.BRANCH_NAME }}
-               \n🔍 Reporte de cobertura adjunto en .csv\"}" \
-               ${{ secrets.DISCORD_WEBHOOK_URL }}
+               -F payload_json='{"content": "📊 **Coverage Test:** '"${{ env.COVERAGE_PERCENTAGE }}"'% en la rama '"${{ env.BRANCH_NAME }}"'\n🔍 Reporte de cobertura adjunto en .csv"}' \
+               "${{ secrets.DISCORD_WEBHOOK_URL }}"
