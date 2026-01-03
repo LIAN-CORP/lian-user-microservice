@@ -61,7 +61,7 @@ public class AuthUseCase implements IAuthServicePort {
 
     @Override
     public void createAdminUserSeeder(String firstName, String lastName, String email, String password, String birthdate) {
-        if(userServicePort.findUserByEmail(email) != null){
+        if(userServicePort.userExistsByEmail(email).isPresent()){
             return;
         }
         User admin = new User();

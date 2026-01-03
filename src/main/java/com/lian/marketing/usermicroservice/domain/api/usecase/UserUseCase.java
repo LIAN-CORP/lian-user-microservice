@@ -45,6 +45,8 @@ public class UserUseCase implements IUserServicePort {
           .orElseThrow(() -> new InvalidCredentialsException(ExceptionConstants.INVALID_CREDENTIALS));
     }
 
+
+
     @Override
     public String generateRegisterCode(Jwt jwt) {
         String id = jwt.getSubject();
@@ -64,6 +66,11 @@ public class UserUseCase implements IUserServicePort {
     @Override
     public void createUser(User user) {
         userPersistencePort.saveUser(user);
+    }
+
+    @Override
+    public Optional<User> userExistsByEmail(String email) {
+        return userPersistencePort.findByEmail(email);
     }
 
     private boolean isAdult(LocalDate birthday){
