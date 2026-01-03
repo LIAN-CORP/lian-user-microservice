@@ -13,4 +13,5 @@ public interface IUserServicePort {
     String generateRegisterCode(Jwt jwt);
     void validateUser(String email, String password, LocalDate birthday);
     UUID findAnyAdminUser();
+    void createUser(User user);
 }

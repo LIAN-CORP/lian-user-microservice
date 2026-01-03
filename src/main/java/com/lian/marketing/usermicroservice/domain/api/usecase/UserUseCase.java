@@ -61,6 +61,11 @@ public class UserUseCase implements IUserServicePort {
         return userPersistencePort.findAnyAdminUser();
     }
 
+    @Override
+    public void createUser(User user) {
+        userPersistencePort.saveUser(user);
+    }
+
     private boolean isAdult(LocalDate birthday){
         if(birthday == null){
             throw new BirthdayIsNullException(ExceptionConstants.BIRTHDAY_IS_NOT_VALID);

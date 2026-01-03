@@ -6,4 +6,5 @@ public interface IAuthServicePort {
     String passwordEncoded(String password);
     void createUser(RegistrationUser user);
     String login(String email, String password);
+    void createAdminUserSeeder(String firstName, String lastName, String email, String password, String birthdate);
 }
