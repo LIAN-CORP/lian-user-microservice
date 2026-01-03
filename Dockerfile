@@ -16,11 +16,14 @@ RUN ./gradlew clean build -x test --no-daemon
 # ============================================
 # RUNTIME STAGE
 # ============================================
-FROM amazoncorretto:21-alpine-jdk
+FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 
 # Install OpenSSL for nimbus jwt
-RUN apk add --no-cache openssl
+RUN apt-get update && apt-get install -y \
+    openssl \
+    ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
 
 # Generate RSA private key
 RUN openssl genpkey \
@@ -29,7 +32,9 @@ RUN openssl genpkey \
     -pkeyopt rsa_keygen_bits:2048
 
 # Generate RSA public key from the private key
-RUN openssl rsa -pubout -in private.pem -out public.pem
+RUN openssl genpkey -algorithm RSA -out private.pem -pkeyopt rsa_keygen_bits:2048 \
+ && openssl rsa -pubout -in private.pem -out public.pem
+#RUN openssl rsa -pubout -in private.pem -out public.pem
 
 # Copy jar file
 COPY --from=build /app/build/libs/*.jar app.jar

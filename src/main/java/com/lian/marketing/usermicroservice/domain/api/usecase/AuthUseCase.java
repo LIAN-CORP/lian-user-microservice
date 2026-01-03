@@ -58,4 +58,20 @@ public class AuthUseCase implements IAuthServicePort {
             throw new RuntimeException("Error: " + e.getMessage());
         }
     }
+
+    @Override
+    public void createAdminUserSeeder(String firstName, String lastName, String email, String password, String birthdate) {
+        if(userServicePort.userExistsByEmail(email).isPresent()){
+            return;
+        }
+        User admin = new User();
+        admin.setFirstName(firstName);
+        admin.setLastName(lastName);
+        admin.setEmail(email);
+        admin.setPassword(passwordEncoded(password));
+        admin.setBirthday(LocalDate.parse(birthdate));
+        admin.setRole("ADMIN");
+        userServicePort.validateUser(admin.getEmail(), admin.getPassword(), admin.getBirthday());
+        userServicePort.createUser(admin);
+    }
 }
